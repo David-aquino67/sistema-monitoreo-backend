@@ -39,7 +39,15 @@ class ServidorSeeder extends Seeder
         ];
 
         foreach ($servidores as $s) {
-            Servidor::create($s);
+            Servidor::create([
+                'titulo' => $s['titulo'],
+                'ubicacion' => $s['ubicacion'],
+                'ip' => $s['ip'],
+                'estado' => $s['estado'],
+                'tiempoActividad' => $s['tiempoActividad'],
+                'latencia' => $s['latencia'],
+                'permisos' => json_decode($s['permisos'], true),
+            ]);
         }
     }
 }
