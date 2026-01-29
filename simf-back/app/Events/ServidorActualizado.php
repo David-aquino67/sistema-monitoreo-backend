@@ -1,3 +1,5 @@
+<?php
+
 class ServidorActualizado implements ShouldBroadcast
 {
 use Dispatchable, InteractsWithSockets, SerializesModels;
@@ -6,14 +8,16 @@ public $servidor;
 
 public function __construct($servidor)
 {
-$this->servidor = $servidor; // Los datos del servidor actualizado
+$this->servidor = $servidor;
 }
 
 public function broadcastOn(): array
 {
-// Canal público donde todos los dashboards escuchan
-return [
-new Channel('monitoreo-global'),
-];
+return [new Channel('monitoreo-global')];
+}
+
+public function broadcastAs(): string
+{
+return 'servidor.cambio';
 }
 }
