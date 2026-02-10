@@ -2,7 +2,8 @@
 namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 class InspeccionController extends Controller
 {
     public function index()
@@ -12,17 +13,9 @@ class InspeccionController extends Controller
     }
     public function procesar(Request $request)
     {
-        $claveRecibida = $request->header('X-API-KEY');
-        $claveCorrecta = "SIMF-2026-ALERT-XSD";
-        if ($claveRecibida !== $claveCorrecta) {
-            return response()->json(['error' => 'Clave API inválida'], 401);
-        }
-        $nombreMonitoreo = $request->input('monitoreo.name');
-        $status = $request->input('heartbeat.status');
+        Log::info(json_encode($request->all()));
         return response()->json([
-            'mensaje' => "Alerta recibida para monitoreo: $nombreMonitoreo",
-            'status' => 'success',
-
+            null
         ]);
 
     }
