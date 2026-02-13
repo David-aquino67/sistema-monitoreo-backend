@@ -15,7 +15,7 @@ class InspeccionController extends Controller
     {
         Log::info(json_encode($request->all()));
         return response()->json([
-            null
+          'request_data' => json_encode($request->all())
         ]);
 
     }
