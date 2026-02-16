@@ -6,5 +6,5 @@ use App\Http\Controllers\Api\InspeccionController;
 
 Route::get('/servidores', [ServidorController::class, 'index']);
 Route::patch('/servidores/{id}/levantar', [ServidorController::class, 'levantar']);
-Route::get('/inspeccion-servidor', [InspeccionController::class, 'investigar']);
+Route::post('/inspeccion-servidor', [InspeccionController::class, 'investigar']);
 Route::post('/alertas/kuma', [InspeccionController::class, 'procesar']);

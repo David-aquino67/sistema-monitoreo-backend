@@ -9,6 +9,13 @@ use App\Services\ServidorScannerService;
 
 class InspeccionController extends Controller
 {
+    private $scanner;
+
+    public function __construct(ServidorScannerService $scanner)
+    {
+        $this->scanner = $scanner;
+    }
+
     public function index()
     {
         $servidores = Servidor::all();
@@ -24,20 +31,12 @@ class InspeccionController extends Controller
         ]);
     }
   
-public function investigar()
+public function investigar(Request $request)
 {
-    try {
-        $datos = $this->scanner->escanearServidor($url);
-        return response()->json([
-            'mensaje' => "Datos procesados correctamente",
-            'datos_limpios' => $datos
-        ], 200, [], JSON_INVALID_UTF8_SUBSTITUTE); 
-        } catch (\Exception $e) {
-            return response()->json([
-                'mensaje' => "No se pudo conectar al servidor institucional",
-                'error' => $e->getMessage()
-            ], 500);
-        }
+
+        $this->scanner->escanearServidor($request->all());
+        return response()->json([], 204); 
+   
     }
 
     private function extraerDato($html, $campo) {
