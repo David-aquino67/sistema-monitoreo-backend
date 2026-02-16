@@ -5,6 +5,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use App\Models\Servidor;
+use App\Services\ServidorScannerService;
+
 class InspeccionController extends Controller
 {
     public function index()
@@ -15,39 +17,21 @@ class InspeccionController extends Controller
     public function procesar(Request $request)
     {
         Log::info(json_encode($request->all()));
+        $message = "Datos recibidos de Kuma: " . json_encode($request->all());
         return response()->json([
-          'request_data' => json_encode($request->all())
+          'request_data' => json_encode($request->all()),
+          'message' => $message
         ]);
-
     }
-    public function investigar()
-    {
-        $url = 'http://11.108.34.122:9080/acceso.jsp';
-
-        try {
-            $respuesta = Http::timeout(10)->get($url);
-            $html = $respuesta->body();
-
-            if (empty($html)) {
-                return response()->json(['error' => 'Servidor respondió vacío'], 404);
-            }
-
-            $datosExtraidos = [
-                'titulo' => $this->extraerDato($html, 'titulo'),
-                'ubicacion' => $this->extraerDato($html, 'ubicacion'),
-                'ip' => '11.108.34.122',
-                'estado' => $respuesta->successful() ? 'online' : 'offline',
-                'tiempoActividad' => $this->extraerDato($html, 'tiempo'),
-                'latencia' => $respuesta->handlerStats()['total_time'] * 1000 . ' ms',
-                'ultimoPing' => now()->toDateTimeString(),
-            ];
-
-            return response()->json([
-                'mensaje' => "Datos procesados del servidor institucional",
-                'datos_limpios' => $datosExtraidos,
-                'cuerpo_crudo_debug' => substr($html, 0, 1000)
-            ]);
-
+  
+public function investigar()
+{
+    try {
+        $datos = $this->scanner->escanearServidor($url);
+        return response()->json([
+            'mensaje' => "Datos procesados correctamente",
+            'datos_limpios' => $datos
+        ], 200, [], JSON_INVALID_UTF8_SUBSTITUTE); 
         } catch (\Exception $e) {
             return response()->json([
                 'mensaje' => "No se pudo conectar al servidor institucional",
