@@ -198,23 +198,18 @@ BEGIN TRY
 SET NOCOUNT ON;
 PRINT 'INCIA CREACIÓN DE TABLAS'
 
-	--Tus tablas aqui, a continuación un ejemplo
-    -- CREATE TABLE comisiones(
+    CREATE TABLE monitores_servidores(
         
-    --     --Columnas de cajon
-	-- 	REGISTRO_id                                 BIGINT                          NOT NULL PRIMARY KEY IDENTITY,
-	-- 	REGISTRO_fecha_creacion						DATETIME2						DEFAULT GETDATE(),
-	-- 	REGISTRO_fecha_ultimo_cambio				DATETIME2						DEFAULT NULL,
+        --Columnas de cajon
+		REGISTRO_id                                 BIGINT                          NOT NULL PRIMARY KEY IDENTITY,
+		REGISTRO_fecha_creacion						DATETIME2						DEFAULT GETDATE(),
+		REGISTRO_fecha_ultimo_cambio				DATETIME2						DEFAULT NULL,
 
-    --     --Columnas de llaves foraneas
-    --     FK_id_creador                               BIGINT                          NOT NULL FOREIGN KEY REFERENCES usuarios(id_sibop),
+        --Columnas de llaves foraneas
+		FK_id_unidad                                BIGINT                          NOT NULL,
+		FK_id_monitor_kuma						    BIGINT                          NOT NULL
 
-    -- 	--Columnas de datos
-	-- 	motivo                                      NVARCHAR(255)                   NOT NULL,
-    --     fecha_inicio                                DATE                            NOT NULL,            
-    --     fecha_fin                                   DATE                            NOT NULL
-
-    -- );
+    );
 
 PRINT 'TERMINA CREACIÓN DE TABLAS EXITOSAMENTE'
 END TRY
@@ -236,16 +231,9 @@ BEGIN TRY
 SET NOCOUNT ON;
 PRINT 'INCIA INSERCIÓN DE DATOS (INFORMACIÓN ESTÁTICA)'
 
-	--Tus inserciones aqui, a continuación un ejemplo
-    -- INSERT INTO tipos_evento(descripcion) VALUES 
-    --     ('Pliego de comisión'),
-    --     ('Pase oficial'),
-    --     ('Pase médico'),
-    --     ('Pase particular'),
-	-- 	('Incapacidad médica'),
-	-- 	('Licencia remunerada'),
-	-- 	('Licencia no remunerada'),
-	-- 	('Vacaciones');
+	INSERT INTO monitores_servidores(FK_id_unidad, FK_id_monitor_kuma) VALUES 
+		(64, 15), -- UMF 9 SIBOP, Kuma UMF 9 HTTP
+		(64, 16); -- UMF 9 SIBOP, Kuma UMF 9 Red
 
 	INSERT INTO versiones(numero_version, titulo_version, fecha_liberacion) VALUES 
 		('v1.0.0', 'Versión inicial del sistema', GETDATE());
