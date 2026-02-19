@@ -231,6 +231,14 @@ BEGIN TRY
 SET NOCOUNT ON;
 PRINT 'INCIA INSERCIÓN DE DATOS (INFORMACIÓN ESTÁTICA)'
 
+	INSERT INTO permisos(ability, descripcion) VALUES 
+		('admin', 'Administrador'),
+		('temporal', 'Monitoreo de fin de semana'),	
+		('monitoreo', 'Monitoreo');
+
+	INSERT INTO usuarios(id_sibop, FK_permiso_ability) VALUES 
+		(1, 'admin');
+
 	INSERT INTO monitores_servidores(FK_id_unidad, FK_id_monitor_kuma) VALUES 
 		(64, 15), -- UMF 9 SIBOP, Kuma UMF 9 HTTP
 		(64, 16); -- UMF 9 SIBOP, Kuma UMF 9 Red
