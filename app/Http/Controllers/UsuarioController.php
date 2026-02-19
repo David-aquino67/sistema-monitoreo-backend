@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UsuarioRequest;
 use App\Services\UsuarioService;
-// use Docs\UsuarioControllerDocInterface;
+use Docs\UsuarioControllerDocInterface;
 
-class UsuarioController // extends Controller implements UsuarioControllerDocInterface
+class UsuarioController extends Controller implements UsuarioControllerDocInterface
 {
     public function index(UsuarioService $usuarioService)
     {

@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Services\AuthService;
-// use Docs\AuthControllerDocInterface;
+use Docs\AuthControllerDocInterface;
 use Illuminate\Http\Request;
 
-class AuthController /* implements AuthControllerDocInterface*/
+class AuthController implements AuthControllerDocInterface
 {
     public function login(Request $request, AuthService $authService)
     {

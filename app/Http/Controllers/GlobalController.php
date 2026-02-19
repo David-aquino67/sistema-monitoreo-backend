@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Services\GlobalService;
-// use Docs\GlobalControllerDocInterface;
+use Docs\GlobalControllerDocInterface;
 
-class GlobalController // extends Controller implements GlobalControllerDocInterface
+class GlobalController extends Controller implements GlobalControllerDocInterface
 {
 	public function indexVersiones(GlobalService $globalService)
 	{

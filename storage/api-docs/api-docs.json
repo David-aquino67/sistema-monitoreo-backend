@@ -1,0 +1,953 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "MOCACI API",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "/",
+            "description": "API Server"
+        }
+    ],
+    "paths": {
+        "/api/auth/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Migrar sesión del SIBOP al MOCACI",
+                "description": "Endpoint para autenticar usuarios migrando su sesión (token) desde el SIBOP. Cada que se crea un token nuevo para el MOCACI se invalida el anterior.",
+                "operationId": "a36cee381b33e2f2a92aaeddd3ad1a34",
+                "responses": {
+                    "200": {
+                        "description": "Autenticación exitosa",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "token": {
+                                            "description": "Token de autenticación generado para MOCACI",
+                                            "type": "string",
+                                            "example": "1|abcdefghijklmnopqrstuvwxyz1234567890"
+                                        },
+                                        "permiso": {
+                                            "description": "ID del permiso asociado al usuario",
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "id_sibop": {
+                                            "description": "ID del usuario en SIBOP",
+                                            "type": "integer",
+                                            "example": 123
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Usuario no encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Error de autenticación"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Usuario no encontrado"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Token no proporcionado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Token no proporcionado"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Token de proporcionado, pero invalido en el SIBOP",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Token inválido o expirado"
+                                        },
+                                        "exception": {
+                                            "type": "string",
+                                            "example": "Unauthenticated SIBOP token"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/auth/logout": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Cerrar sesión del usuario (i.e. eliminar tokens)",
+                "description": "Endpoint para cerrar la sesión del usuario autenticado, es decir, eliminar la validez de su ultimo token creado",
+                "operationId": "f5095a7041d9e3247d073c1f468efce2",
+                "responses": {
+                    "204": {
+                        "description": "Sesión cerrada exitosamente (Sin contenido)",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "No autenticado - Token inválido, expirado o no proporcionado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/auth/validate/token": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Validar token de sesión actual",
+                "description": "Endpoint para verificar que el token del usuario actual sigue siendo válido en el SIBOP.",
+                "operationId": "04a2e6c6f915cdda4f08b07c83ce99b0",
+                "responses": {
+                    "200": {
+                        "description": "Token válido",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "No autenticado - Token inválido, expirado o no proporcionado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/auth/validate/user/{id_usuario}": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Verificar existencia de usuario",
+                "description": "Endpoint para verificar si un usuario existe en el sistema mediante su ID de SIBOP.",
+                "operationId": "44533ba8b96f96e8ecb85cae021c83bb",
+                "parameters": [
+                    {
+                        "name": "id_usuario",
+                        "in": "path",
+                        "description": "ID del usuario en SIBOP",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Verificación exitosa",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "existe": {
+                                            "description": "Indica si el usuario existe en el sistema",
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/global/cache": {
+            "delete": {
+                "tags": [
+                    "Global"
+                ],
+                "summary": "Limpia la caché del sistema",
+                "description": "Endpoint para eliminar la caché almacenada del sistema (por ejemplo, datos del SIBOP cacheados)",
+                "operationId": "9f6f82edb01b81253047eae0dd58b910",
+                "responses": {
+                    "204": {
+                        "description": "Caché eliminada exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "No autorizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/global/versiones": {
+            "get": {
+                "tags": [
+                    "Global"
+                ],
+                "summary": "Lista todas las versiones del sistema",
+                "description": "Endpoint para obtener el historial completo de versiones del sistema ordenadas por fecha de liberación descendente",
+                "operationId": "1a2dbd81f5bdc89c171727b725bbe541",
+                "responses": {
+                    "200": {
+                        "description": "Obtención de listado exitoso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "numero_version": {
+                                                "type": "string",
+                                                "example": "1.0.0"
+                                            },
+                                            "fecha_liberacion": {
+                                                "type": "string",
+                                                "format": "date",
+                                                "example": "2026-01-27"
+                                            },
+                                            "created_at": {
+                                                "type": "string",
+                                                "format": "date-time",
+                                                "example": "2026-01-27T12:00:00.000000Z"
+                                            },
+                                            "updated_at": {
+                                                "type": "string",
+                                                "format": "date-time",
+                                                "example": "2026-01-27T12:00:00.000000Z"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "No autorizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/global/versiones/ultima": {
+            "get": {
+                "tags": [
+                    "Global"
+                ],
+                "summary": "Obtiene la última versión del sistema",
+                "description": "Endpoint para obtener la versión más reciente del sistema basada en la fecha de liberación",
+                "operationId": "d6b3fb8212ea28415596b5893b1ad9f9",
+                "responses": {
+                    "200": {
+                        "description": "Obtención exitosa de la última versión",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "numero_version": {
+                                            "type": "string",
+                                            "example": "1.0.0"
+                                        },
+                                        "fecha_liberacion": {
+                                            "type": "string",
+                                            "format": "date",
+                                            "example": "2026-01-27"
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2026-01-27T12:00:00.000000Z"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2026-01-27T12:00:00.000000Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "No autorizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/global/versiones/{version}": {
+            "get": {
+                "tags": [
+                    "Global"
+                ],
+                "summary": "Obtiene una versión específica del sistema",
+                "description": "Endpoint para obtener los detalles de una versión específica del sistema por su número de versión",
+                "operationId": "380121bedb1d4bdf1c8305d657445160",
+                "parameters": [
+                    {
+                        "name": "version",
+                        "in": "path",
+                        "description": "Número de versión a consultar",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "1.0.0"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Obtención exitosa de la versión",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "numero_version": {
+                                            "type": "string",
+                                            "example": "1.0.0"
+                                        },
+                                        "fecha_liberacion": {
+                                            "type": "string",
+                                            "format": "date",
+                                            "example": "2026-01-27"
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2026-01-27T12:00:00.000000Z"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2026-01-27T12:00:00.000000Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "No autorizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Versión no encontrada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "La versión solicitada no existe"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/usuarios": {
+            "get": {
+                "tags": [
+                    "Usuarios"
+                ],
+                "summary": "Lista todos los usuarios desde SIBOP",
+                "description": "Endpoint para obtener el listado de usuarios desde el sistema SIBOP",
+                "operationId": "9029a708bc7e73e82a20ace52a335b9a",
+                "responses": {
+                    "200": {
+                        "description": "Obtención de listado exitoso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "nombre": {
+                                                "type": "string",
+                                                "example": "Juan Pérez"
+                                            },
+                                            "matricula": {
+                                                "type": "string",
+                                                "example": "12345"
+                                            },
+                                            "email": {
+                                                "type": "string",
+                                                "example": "juan.perez@example.com"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "No autorizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "502": {
+                        "description": "Error al recuperar usuarios del SIBOP",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Error al recuperar usuarios del SIBOP"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Usuarios"
+                ],
+                "summary": "Importa un usuario desde SIBOP al sistema MOCACI",
+                "description": "Endpoint para registrar/importar un usuario del SIBOP al sistema MOCACI con un permiso específico",
+                "operationId": "6d7ce1e8942aa8b0779e411a1c35f826",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "id_sibop",
+                                    "FK_permiso_ability",
+                                    "id_sibop_jefe"
+                                ],
+                                "properties": {
+                                    "id_sibop": {
+                                        "description": "ID del usuario en SIBOP",
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "FK_permiso_ability": {
+                                        "description": "Permiso a asignar al usuario",
+                                        "type": "string",
+                                        "example": "admin"
+                                    },
+                                    "id_sibop_jefe": {
+                                        "description": "ID del jefe del usuario en SIBOP",
+                                        "type": "integer",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Usuario importado exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id_sibop": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "FK_permiso_ability": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "REGISTRO_fecha_creacion": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2026-01-22T17:09:12.176000Z"
+                                        },
+                                        "REGISTRO_fecha_ultimo_cambio": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2026-01-22T17:09:12.176000Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "No autorizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Usuario registrado previamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Usuario registrado previamente"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/usuarios/{id_sibop}": {
+            "get": {
+                "tags": [
+                    "Usuarios"
+                ],
+                "summary": "Obtiene un usuario específico por su ID de SIBOP",
+                "description": "Endpoint para obtener información detallada de un usuario desde SIBOP",
+                "operationId": "c1d3faff7c3758d43f3433c5c593ab16",
+                "parameters": [
+                    {
+                        "name": "id_sibop",
+                        "in": "path",
+                        "description": "ID del usuario en SIBOP",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Usuario encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "nombre": {
+                                            "type": "string",
+                                            "example": "Juan Pérez"
+                                        },
+                                        "matricula": {
+                                            "type": "string",
+                                            "example": "12345"
+                                        },
+                                        "email": {
+                                            "type": "string",
+                                            "example": "juan.perez@example.com"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "No autorizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Usuario no encontrado en el SIBOP",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Usuario no encontrado en el SIBOP"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Usuarios"
+                ],
+                "summary": "Actualiza el permiso de un usuario",
+                "description": "Endpoint para actualizar el permiso asignado a un usuario en el sistema MOCACI",
+                "operationId": "a5c05cf675609f77c6d3c6516d9062f5",
+                "parameters": [
+                    {
+                        "name": "id_sibop",
+                        "in": "path",
+                        "description": "ID del usuario en SIBOP",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "FK_permiso_ability",
+                                    "id_sibop_jefe"
+                                ],
+                                "properties": {
+                                    "FK_permiso_ability": {
+                                        "description": "Nuevo permiso a asignar",
+                                        "type": "string",
+                                        "example": "user"
+                                    },
+                                    "id_sibop_jefe": {
+                                        "description": "ID del jefe del usuario en SIBOP",
+                                        "type": "integer",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "Usuario actualizado exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "No autorizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Usuario no encontrado o error de validación",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Usuarios"
+                ],
+                "summary": "Elimina un usuario del sistema MOCACI",
+                "description": "Endpoint para eliminar un usuario registrado en MOCACI (no elimina del SIBOP)",
+                "operationId": "a9d0f5cdb9c37aa1793182c0e8d652f2",
+                "parameters": [
+                    {
+                        "name": "id_sibop",
+                        "in": "path",
+                        "description": "ID del usuario en SIBOP",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Usuario eliminado exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "No autorizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Usuario no encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/usuarios/search": {
+            "get": {
+                "tags": [
+                    "Usuarios"
+                ],
+                "summary": "Busca usuarios por nombre o matrícula",
+                "description": "Endpoint para buscar usuarios en el sistema mediante filtros de nombre y/o matrícula",
+                "operationId": "5ac21845c5605b3b73cb455ea5055a74",
+                "parameters": [
+                    {
+                        "name": "nombre",
+                        "in": "query",
+                        "description": "Nombre del usuario a buscar",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "Juan"
+                        }
+                    },
+                    {
+                        "name": "matricula",
+                        "in": "query",
+                        "description": "Matrícula del usuario a buscar",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "12345"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Búsqueda exitosa",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "nombre": {
+                                                "type": "string",
+                                                "example": "Juan Pérez"
+                                            },
+                                            "matricula": {
+                                                "type": "string",
+                                                "example": "12345"
+                                            },
+                                            "email": {
+                                                "type": "string",
+                                                "example": "juan.perez@example.com"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "No autorizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Auth",
+            "description": "Auth"
+        },
+        {
+            "name": "Global",
+            "description": "Global"
+        },
+        {
+            "name": "Usuarios",
+            "description": "Usuarios"
+        }
+    ]
+}
