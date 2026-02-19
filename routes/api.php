@@ -1,8 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\ServidorController;
-use App\Http\Controllers\Api\InspeccionController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GlobalController;
 use App\Http\Controllers\UsuarioController;
@@ -30,9 +28,3 @@ Route::prefix('usuarios')->controller(UsuarioController::class)->group(function 
 	Route::put('/{id_sibop}', 'update')->middleware(['auth:sanctum', 'ability:admin']);
 	Route::delete('/{id_sibop}', 'destroy')->middleware(['auth:sanctum', 'ability:admin']);
 });
-
-
-Route::get('/servidores', [ServidorController::class, 'index']);
-Route::patch('/servidores/{id}/levantar', [ServidorController::class, 'levantar']);
-Route::post('/inspeccion-servidor', [InspeccionController::class, 'investigar']);
-Route::post('/alertas/kuma', [InspeccionController::class, 'procesar']);

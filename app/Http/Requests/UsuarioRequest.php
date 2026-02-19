@@ -36,7 +36,6 @@ class UsuarioRequest extends FormRequest
         $postRules = [
             'id_sibop' => ['required', 'integer', new ExisteIdUsuarioSibopRule()],
             'FK_permiso_ability' => ['required', 'string', 'exists:permisos,ability'],
-			'id_sibop_jefe' => ['required', 'integer', new ExisteIdUsuarioSibopRule()]
         ];
 
         if($this->isMethod('post')) { 
