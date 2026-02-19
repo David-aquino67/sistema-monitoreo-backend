@@ -5,7 +5,7 @@ uses(Tests\TestCase::class);
 
 function crearUsuarioGenerico($id_sibop, $admin){
     $response = test()->actingAs($admin)->postJson('api/usuarios', [
-        'FK_permiso_ability' => 'directivo',
+        'FK_permiso_ability' => 'admin',
         'id_sibop' => $id_sibop,
     ]);    
     return $response;
@@ -49,7 +49,7 @@ test('PUT: api/usuarios | Responde correctamente al actualizar un usuario existe
     $id = env('SIBOP_TEST_RANDOM_USER_ID');
     crearUsuarioGenerico(admin: $admin, id_sibop: $id);
     $response = $this->actingAs($admin)->putJson("api/usuarios/{$id}", [
-        'FK_permiso_ability' => 'administrativo',
+        'FK_permiso_ability' => 'admin',
 		'id_sibop_jefe' => 1,
     ]);    
     $response->assertStatus(204);
@@ -59,7 +59,7 @@ test('PUT: api/usuarios | Responde correctamente al intentar actualizar un usuar
     $admin = Usuario::find(1);
     $id = env('SIBOP_TEST_UNEXISTENT_USER_ID');
     $response = $this->actingAs($admin)->putJson("api/usuarios/$id", [
-        'FK_permiso_ability' => 'administrativo',
+        'FK_permiso_ability' => 'admin',
 		'id_sibop_jefe' => 1,
     ]);    
     $response->assertStatus(422);
@@ -79,7 +79,6 @@ test('DELETE: api/usuarios | Responde correctamente al eliminar un usuario inexi
     $response = $this->actingAs($admin)->deleteJson("api/usuarios/$id", []);    
     $response->assertStatus(422);
 });
-
 
 afterEach(function () {
    Usuario::where('id_sibop', 5)->delete(); 
