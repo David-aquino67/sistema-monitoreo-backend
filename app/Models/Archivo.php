@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Archivo extends Model
 {
+    // ejemplo cuando sea de kuma public $connection = 'kuma';
+
     protected $table = "archivos";
     protected $primaryKey = "REGISTRO_id";
  

@@ -564,11 +564,6 @@
                                         "description": "Permiso a asignar al usuario",
                                         "type": "string",
                                         "example": "admin"
-                                    },
-                                    "id_sibop_jefe": {
-                                        "description": "ID del jefe del usuario en SIBOP",
-                                        "type": "integer",
-                                        "example": 1
                                     }
                                 },
                                 "type": "object"

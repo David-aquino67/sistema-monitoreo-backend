@@ -160,7 +160,7 @@ interface UsuarioControllerDocInterface
 				   properties: [
 					   new OA\Property(property: "id_sibop", type: "integer", example: 1, description: "ID del usuario en SIBOP"),
 					   new OA\Property(property: "FK_permiso_ability", type: "string", example: "admin", description: "Permiso a asignar al usuario"),
-					   new OA\Property(property: "id_sibop_jefe", type: "integer", example: 1, description: "ID del jefe del usuario en SIBOP"),
+					 
 				   ]
 			)
 		),
