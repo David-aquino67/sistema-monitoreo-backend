@@ -8,6 +8,6 @@ class Monitor extends Model
     protected $primaryKey = "id";
     protected $name = "name";
     protected $interval = "interval";
+    protected $type = "type";
 
-    
 }
