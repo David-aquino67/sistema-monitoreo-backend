@@ -4,12 +4,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Monitor extends Model
 {
-    protected $table = "monitor";
-    protected $primaryKey = "id";
-    protected $name = "name";
-    protected $interval = "interval";
-    protected $type = "type";
-
-    protected $connection = 'kuma'; // <--- Indica la conexión de MariaDB
+    protected $table = 'monitores_servidores';
+    protected $primaryKey = 'REGISTRO_id';
     public $timestamps = false;
+    protected $fillable = [
+        'FK_id_unidad',
+        'FK_id_monitor_kuma'
+    ];
 }
