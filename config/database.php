@@ -112,6 +112,21 @@ return [
 			'encrypt' => 'yes',
 			'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
 		],
+        'kuma' => [
+            'driver' => 'mysql',
+            'url' => env('DATABASE_URL_KUMA'),
+            'host' => env('DB_HOST_KUMA', '11.1.XX.XX'), // El host que tapaste
+            'port' => env('DB_PORT_KUMA', '3306'),
+            'database' => env('DB_DATABASE_KUMA', 'kuma1'),
+            'username' => env('DB_USERNAME_KUMA', 'tu_usuario'),
+            'password' => env('DB_PASSWORD_KUMA', 'tu_password'),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
+        ],
 
     ],
 
