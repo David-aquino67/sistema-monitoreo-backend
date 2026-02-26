@@ -11,4 +11,12 @@ class Heartbeat extends Model
     private $msg = "msg";
     private $time = "time";
     private $ping = "ping";
+
+    protected $connection = 'kuma';
+    protected $table = 'heartbeat';
+    public $timestamps = false;
+    public function monitor()
+    {
+        return $this->belongsTo(Monitor::class, 'monitor_id', 'id');
+    }
 }
