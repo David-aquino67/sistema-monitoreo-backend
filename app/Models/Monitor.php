@@ -11,6 +11,5 @@ class Monitor extends Model
     protected $type = "type";
 
     protected $connection = 'kuma'; // <--- Indica la conexión de MariaDB
-    protected $table = 'monitor';
     public $timestamps = false;
 }
