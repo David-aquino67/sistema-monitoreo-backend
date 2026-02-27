@@ -17,12 +17,14 @@ class CheckServerStatus extends Command
                 ->orderBy('time', 'desc')
                 ->first();
             if ($ultimoEstado) {
-                event(new \App\Events\ServerStatusUpdated([
+                event(new \App\Events\ServerStatusCambio([
                     'sibop_id' => $mapeo->FK_id_unidad,
                     'status'   => $ultimoEstado->status,
                     'ping'     => $ultimoEstado->ping,
                     'time'     => $ultimoEstado->time
                 ]));
+                Log::info("Evento enviado para la unidad: " . $mapeo->FK_id_unidad);
+                $this->info("Chequeo completado para ID: " . $mapeo->FK_id_monitor_kuma);
             }
         }
     }
