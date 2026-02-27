@@ -13,7 +13,6 @@ class Heartbeat extends Model
     private $ping = "ping";
 
     protected $connection = 'kuma';
-    protected $table = 'heartbeat';
     public $timestamps = false;
     public function monitor()
     {
