@@ -101,7 +101,7 @@ return [
         'sqlsrv' => [
 			'driver' => 'sqlsrv',
 			'url' => env('DB_URL'),
-			'host' => env('DB_HOST', 'localhost'),
+			'host' => env('DB_HOST', '127.0.0.1'),
 			'port' => env('DB_PORT', '1433'),
 			'database' => env('DB_DATABASE', 'laravel'),
 			'username' => env('DB_USERNAME', 'root'),
@@ -113,7 +113,7 @@ return [
 			'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
 		],
         'kuma' => [
-            'driver' => 'mariadb',
+            'driver' => 'mysql',
             'host' => env('DB_HOST_KUMA', '11.1.22.45'),
             'port' => env('DB_PORT_KUMA', '3306'),
             'database' => env('DB_DATABASE_KUMA', 'kuma1'),
