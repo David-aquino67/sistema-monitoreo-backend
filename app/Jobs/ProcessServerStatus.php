@@ -1,3 +1,4 @@
+<?php
 namespace App\Jobs;
 
 use App\Models\Heartbeat;
@@ -21,13 +22,11 @@ class ProcessServerStatus implements ShouldQueue
 
     public function handle()
     {
-        // Buscamos el estado en MariaDB (Kuma)
         $ultimoEstado = Heartbeat::where('monitor_id', $this->mapeo->FK_id_monitor_kuma)
             ->orderBy('time', 'desc')
             ->first();
 
         if ($ultimoEstado) {
-            // Disparamos el evento
             event(new ServerStatusCambio([
                 'sibop_id' => $this->mapeo->FK_id_unidad,
                 'status'   => $ultimoEstado->status,

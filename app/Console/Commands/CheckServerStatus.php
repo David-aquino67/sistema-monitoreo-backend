@@ -12,21 +12,12 @@ class CheckServerStatus extends Command
 
     public function handle()
     {
-        $mapeos = \App\Models\MonitorServidor::all();
-        foreach ($mapeos as $mapeo) {
-            $ultimoEstado = \App\Models\heartbeat::where('monitor_id', $mapeo->FK_id_monitor_kuma)
-                ->orderBy('time', 'desc')
-                ->first();
-            if ($ultimoEstado) {
-                event(new \App\Events\ServerStatusCambio([
-                    'sibop_id' => $mapeo->FK_id_unidad,
-                    'status'   => $ultimoEstado->status,
-                    'ping'     => $ultimoEstado->ping,
-                    'time'     => $ultimoEstado->time
-                ]));
-                Log::info("Evento enviado para la unidad: " . $mapeo->FK_id_unidad);
-                $this->info("Chequeo completado para ID: " . $mapeo->FK_id_monitor_kuma);
-            }
-        }
+    $mapeos = \App\Models\MonitorMapeo::all();
+
+    foreach ($mapeos as $mapeo) {
+       \App\Jobs\ProcessServerStatus::dispatch($mapeo);
+    }
+
+    $this->info('Se han encolado ' . $mapeos->count() . ' servidores para revisión.');
     }
 }
