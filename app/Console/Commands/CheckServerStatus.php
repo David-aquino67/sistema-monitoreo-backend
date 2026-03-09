@@ -12,7 +12,7 @@ class CheckServerStatus extends Command
 
     public function handle()
     {
-    $mapeos = \App\Models\MonitorMapeo::all();
+    $mapeos = \App\Models\MonitorServidor::all();
     $listaEstados = [];
 
     foreach ($mapeos as $mapeo) {
