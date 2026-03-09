@@ -11,11 +11,11 @@ class ServerStatusCambio implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $payload;
+    public $servidores;
 
-    public function __construct($payload)
+    public function __construct($servidores)
     {
-        $this->payload = $payload;
+        $this->servidores = $servidores;
     }
 
     public function broadcastOn()
