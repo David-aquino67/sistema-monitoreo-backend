@@ -11,7 +11,7 @@ class CheckServerStatus extends Command
     protected $description = 'Revisa el estado de los servidores y emite eventos de actualización.';
 
     public function handle()
-    {
+{
     $mapeos = \App\Models\MonitorServidor::all();
     $disponibilidad = [];
 
@@ -23,17 +23,21 @@ class CheckServerStatus extends Command
         if ($ultimoHeartbeat) {
             $disponibilidad[] = [
                 'unidad_id' => $mapeo->FK_id_unidad,
-                'online'    => (bool) $ultimoHeartbeat->status, // 1 = true, 0 = false
+                'online'    => (bool) $ultimoHeartbeat->status,
                 'latencia'  => $ultimoHeartbeat->ping,
                 'fecha'     => $ultimoHeartbeat->time,
-                'msg'       => $ultimoHeartbeat->msg
             ];
         }
     }
 
     if (count($disponibilidad) > 0) {
-        event(new \App\Events\ServerStatusCambio($disponibilidad));
-        \Log::info("Monitoreo masivo enviado con " . count($disponibilidad) . " registros.");
+        $coleccion = collect($disponibilidad);
+        $chunks = $coleccion->chunk(50);
+        foreach ($chunks as $index => $chunk) {
+            event(new \App\Events\ServerStatusCambio($chunk->values()->all()));
+            \Log::info("Paquete de monitoreo #" . ($index + 1) . " enviado con " . $chunk->count() . " registros.");
+        }
+        $this->info("Proceso completado: " . count($disponibilidad) . " servidores enviados en " . $chunks->count() . " paquetes.");
     }
-    }
+}
 }
