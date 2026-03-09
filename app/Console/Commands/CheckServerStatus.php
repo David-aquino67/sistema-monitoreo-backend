@@ -13,11 +13,28 @@ class CheckServerStatus extends Command
     public function handle()
     {
     $mapeos = \App\Models\MonitorMapeo::all();
+    $listaEstados = [];
 
     foreach ($mapeos as $mapeo) {
-       \App\Jobs\ProcessServerStatus::dispatch($mapeo);
+        $ultimoEstado = \App\Models\Heartbeat::where('monitor_id', $mapeo->FK_id_monitor_kuma)
+            ->orderBy('time', 'desc')
+            ->first();
+
+        if ($ultimoEstado) {
+            $listaEstados[] = [
+                'sibop_id' => $mapeo->FK_id_unidad,
+                'status'   => $ultimoEstado->status,
+                'ping'     => $ultimoEstado->ping,
+                'time'     => $ultimoEstado->time
+            ];
+        }
     }
 
-    $this->info('Se han encolado ' . $mapeos->count() . ' servidores para revisión.');
+    if (!empty($listaEstados)) {
+        event(new \App\Events\ServerStatusCambio($listaEstados));
+        
+        $this->info("Se envió una actualización masiva con " . count($listaEstados) . " servidores.");
+        \Log::info("Monitoreo masivo enviado.");
+        }
     }
 }
