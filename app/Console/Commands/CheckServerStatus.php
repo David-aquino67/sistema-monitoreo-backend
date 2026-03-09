@@ -13,28 +13,27 @@ class CheckServerStatus extends Command
     public function handle()
     {
     $mapeos = \App\Models\MonitorServidor::all();
-    $listaEstados = [];
+    $disponibilidad = [];
 
     foreach ($mapeos as $mapeo) {
-        $ultimoEstado = \App\Models\Heartbeat::where('monitor_id', $mapeo->FK_id_monitor_kuma)
+        $ultimoHeartbeat = \App\Models\Heartbeat::where('monitor_id', $mapeo->FK_id_monitor_kuma)
             ->orderBy('time', 'desc')
             ->first();
 
-        if ($ultimoEstado) {
-            $listaEstados[] = [
-                'sibop_id' => $mapeo->FK_id_unidad,
-                'status'   => $ultimoEstado->status,
-                'ping'     => $ultimoEstado->ping,
-                'time'     => $ultimoEstado->time
+        if ($ultimoHeartbeat) {
+            $disponibilidad[] = [
+                'unidad_id' => $mapeo->FK_id_unidad,
+                'online'    => (bool) $ultimoHeartbeat->status, // 1 = true, 0 = false
+                'latencia'  => $ultimoHeartbeat->ping,
+                'fecha'     => $ultimoHeartbeat->time,
+                'msg'       => $ultimoHeartbeat->msg
             ];
         }
     }
 
-    if (!empty($listaEstados)) {
-        event(new \App\Events\ServerStatusCambio($listaEstados));
-        
-        $this->info("Se envió una actualización masiva con " . count($listaEstados) . " servidores.");
-        \Log::info("Monitoreo masivo enviado.");
-        }
+    if (count($disponibilidad) > 0) {
+        event(new \App\Events\ServerStatusCambio($disponibilidad));
+        \Log::info("Monitoreo masivo enviado con " . count($disponibilidad) . " registros.");
+    }
     }
 }
