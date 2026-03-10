@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GlobalController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Middleware\DatosLoginMiddleware;
+use App\Http\Controllers\ServidorController;
 
 Route::prefix('auth')->controller(AuthController::class)->group(function () {
 	Route::post('/login', 'login')->middleware([DatosLoginMiddleware::class]);
@@ -28,3 +29,5 @@ Route::prefix('usuarios')->controller(UsuarioController::class)->group(function 
 	Route::put('/{id_sibop}', 'update')->middleware(['auth:sanctum', 'ability:admin']);
 	Route::delete('/{id_sibop}', 'destroy')->middleware(['auth:sanctum', 'ability:admin']);
 });
+
+Route::get('/servidores', [ServidorController::class, 'index']);
