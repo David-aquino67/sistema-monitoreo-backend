@@ -8,8 +8,9 @@ class Gateway
 {
     public function dispatchStatusUpdate(Collection $data)
     {
-        $data->chunk(50)->each(function ($chunk) {
+        $data->chunk(50)->each(function ($chunk, $index) {
             event(new ServerStatusCambio($chunk->values()->all()));
+            Log::info("Gateway: Paquete #" . ($index + 1) . " procesado.");
         });
     }
 }
