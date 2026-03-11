@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-
-=======
 # SIMF - Sistema de Monitoreo  (Backend)
 Sistema de monitoreo de servidores en tiempo real que actúa como un Proxy de Datos, el backend extrae información de disponibilidad desde UptimeKuma, la mapea con unidades del sistema SIBOP y la despacha mediante WebSockets.
 
@@ -65,4 +62,3 @@ Procesador de Tareas (Scheduler):
 ```
 php artisan schedule:work
 ```
->>>>>>> 50c752c605bd10415d185b8d09a07df021945f2b
