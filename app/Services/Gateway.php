@@ -3,7 +3,7 @@ namespace App\Services;
 
 use App\Events\ServerStatusCambio;
 use Illuminate\Support\Collection;
-
+use Illuminate\Support\Facades\Log;
 class Gateway
 {
     public function dispatchStatusUpdate(Collection $data)
