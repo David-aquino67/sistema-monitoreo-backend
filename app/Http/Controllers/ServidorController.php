@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Log; // Para registrar información en los logs
 
 class ServidorController extends Controller
 {
-    public function index()
+    public function index(StatusService $statusService)
     {
         /return response()->json($statusService->getStatusFull());
     }
