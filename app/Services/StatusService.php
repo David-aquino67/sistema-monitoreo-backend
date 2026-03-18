@@ -14,7 +14,7 @@ class StatusService
         return Cache::remember('servidores_status_full', 300, function () {
             $mapeos = MonitorServidor::all();
             $ids = $mapeos->pluck('FK_id_unidad')->toArray();
-            $unidadesSibop = Sibop::unidades(env('SIBOP_API_TOKEN'), $ids);
+            $unidadesSibop = Sibop::unidades(env('SIBOP_API_TOKEN'), $ids); // usar para cache 
             return $mapeos->map(function ($item) use ($unidadesSibop) {
                 $unidadData = collect($unidadesSibop)->firstWhere('REGISTRO_id', $item->FK_id_unidad);
                 $ultimoHb = Heartbeat::where('monitor_id', $item->FK_id_monitor_kuma)
