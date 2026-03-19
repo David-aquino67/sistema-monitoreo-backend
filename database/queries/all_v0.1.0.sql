@@ -348,7 +348,9 @@ INSERT INTO monitores_servidores(FK_id_unidad, FK_id_monitor_kuma) VALUES
 		('v1.1.0', 'Versión inicial del sistema', GETDATE());
 
 	INSERT INTO historial_versiones(numero_version, titulo_cambio, descripcion_cambio) VALUES
-		('v1.1.0', 'Adición de tablas', 'Se añade las tablas tblCons, tblRoot, tblUpdate');
+		'v1.1.0', 
+    'Infraestructura de Conexiones', 
+    'Se añadieron las tablas estructurales de mRemoteNG (tblCons, tblRoot, tblConfig) para la gestión centralizada de accesos remotos.';
 
 PRINT 'TERMINA INSERCIÓN DE DATOS (INFORMACIÓN ESTÁTICA) EXITOSAMENTE'
 END TRY

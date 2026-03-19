@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Cache;
 
 class StatusService
 {
-    private $refresh_cahe = 5184000;
+    private $refresh_cahe = 60*60*24*62;
 
     public function getStatusFull()
     {
