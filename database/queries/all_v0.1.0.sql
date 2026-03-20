@@ -498,3 +498,14 @@ CREATE TABLE [dbo].[tblUpdate] (
 [LastUpdate] [datetime] NULL
 ) ON [PRIMARY]
 GO
+
+CREATE TABLE [dbo].[monitor_conexion] (
+    [id] [int] IDENTITY(1,1) NOT NULL,
+    [unidad_id] [int] NOT NULL,           -- ID que viene del SIBOP
+    [constant_id] [varchar](128) NOT NULL, -- FK que apunta a tblCons.ConstantID
+    [created_at] [datetime] DEFAULT GETDATE(),
+    PRIMARY KEY CLUSTERED ([id] ASC)
+) ON [PRIMARY];
+GO
+
+CREATE INDEX IX_monitor_conexion_unidad ON [monitor_conexion] (unidad_id);
