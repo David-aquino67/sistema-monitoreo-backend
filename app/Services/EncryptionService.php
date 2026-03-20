@@ -4,7 +4,7 @@ namespace App\Services;
 
 class EncryptionService
 {
-    public function decryptMRemote($base64Password, $masterPassword = '')
+    public function decryptMRemote($base64Password, $masterPassword = '1234')
     {
         if (empty($base64Password)) return null;
         $data = base64_decode($base64Password);
