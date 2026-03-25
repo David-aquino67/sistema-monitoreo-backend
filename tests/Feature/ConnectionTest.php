@@ -8,9 +8,6 @@ use App\Services\EncryptionService;
 
 class ConnectionTest extends TestCase
 {
-    /**
-     * Verifica que el servicio recupera y descifra los datos de la DB real.
-     */
     public function test_debe_descifrar_password_real_de_mremoteng()
     {
         // 1. Instanciamos los servicios manualmente para la prueba
