@@ -18,7 +18,7 @@ class ConnectionTest extends TestCase
         $connection = new ConnectionService($encryption);
 
         // 2. Act: Buscamos la unidad 1 (la que insertamos en SQL)
-        $resultado = $connection->getCredentialsByUnidad(2);
+        $resultado = $connection->getCredentialsByUnidad(1);
 
         // 3. Assert: Verificaciones
         $this->assertNotNull($resultado, "No se encontró el mapeo en la tabla monitor_conexion.");
