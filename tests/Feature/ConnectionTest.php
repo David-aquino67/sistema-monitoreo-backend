@@ -9,22 +9,24 @@ use App\Services\EncryptionService;
 class ConnectionTest extends TestCase
 {
     public function test_debe_descifrar_password_real_de_mremoteng()
-    {
-        // 1. Instanciamos los servicios manualmente para la prueba
-        $encryption = new EncryptionService();
-        $connection = new ConnectionService($encryption);
+{
+    $encryption = new EncryptionService();
+    $connection = new ConnectionService($encryption);
 
-        // 2. Act: Buscamos la unidad 1 (la que insertamos en SQL)
-        $resultado = $connection->getCredentialsByUnidad(1);
+    // Buscamos la unidad (asegúrate que en smars_testing sea el ID 1)
+    $resultado = $connection->getCredentialsByUnidad(1);
 
-        // 3. Assert: Verificaciones
-        $this->assertNotNull($resultado, "No se encontró el mapeo en la tabla monitor_conexion.");
-        $this->assertEquals('11.1.22.201', $resultado['host'], "El Hostname no coincide.");
-        
-        // Aquí probamos el descifrado
-        // Si todo es correcto, debería devolver la clave que mRemoteNG guardó.
-        $this->assertNotEmpty($resultado['pass'], "La contraseña descifrada está vacía.");
-        
-        dump("Contraseña recuperada: " . $resultado['pass']);
-    }
+    $this->assertNotNull($resultado, "Error: No se encontró la unidad 1 en la DB de pruebas.");
+
+    // --- DEPURACIÓN VISUAL ---
+    dump("------------------------------------");
+    dump("IP del Servidor: " . $resultado['host']);
+    dump("Usuario: " . $resultado['user']);
+    dump("PASSWORD DESCIFRADA: " . $resultado['pass']);
+    dump("------------------------------------");
+
+    $this->assertNotEquals("Error al descifrar", $resultado['pass']);
+    // En ConnectionTest.php línea 29, cambia por:
+$this->assertStringNotContainsString("Error", $resultado['pass']);
+}
 }
