@@ -36,4 +36,11 @@ Al ejecutar la suite de pruebas mediante el comando
  php artisan test --filter=ConnectionTest
 ```
 se obtuvieron los siguientes resultados en el entorno de desarrollo.
+|Parámetro|Valor Recuperado|Estado|
+|---------|----------------|------|
+|IP del Servidor|11.1.22.201|Correcto|
+|Usuario|sa|Correcto|
+|Password|12345|Correcto|
+
+
 
