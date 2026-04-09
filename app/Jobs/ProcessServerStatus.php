@@ -8,6 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use App\Repositories\Interfaces\HeartbeatRepositoryInterface;
 
 class ProcessServerStatus implements ShouldQueue
 {
@@ -20,19 +21,14 @@ class ProcessServerStatus implements ShouldQueue
         $this->mapeo = $mapeo;
     }
 
-    public function handle()
+    public function handle(HeartbeatRepositoryInterface $heartbeatrepo)
     {
-        $ultimoEstado = $this->obtenerUltimoHeartbeat();
+        $ultimoEstado = $heartbeatrepo->obtenerUltimoHeartbeat($this->mapeo->FK_id_monitor_kuma);
         if ($ultimoEstado) {
             $this->broadcastServerUpdate($ultimoEstado);
         }
     }
-    private function obtenerUltimoHeartbeat(): ?Heartbeat
-    {
-        return Heartbeat::where('monitor_id', $this->mapeo->FK_id_monitor_kuma)
-            ->orderBy('time', 'desc')
-            ->first();
-    }
+
     private function broadcastServerUpdate(Heartbeat $heartbeat): void
     {
         event(new ServerStatusCambio([
