@@ -22,17 +22,24 @@ class ProcessServerStatus implements ShouldQueue
 
     public function handle()
     {
-        $ultimoEstado = Heartbeat::where('monitor_id', $this->mapeo->FK_id_monitor_kuma)
+        $ultimoEstado = $this->obtenerUltimoHeartbeat();
+        if ($ultimoEstado) {
+            $this->broadcastServerUpdate($ultimoEstado);
+        }
+    }
+    private function obtenerUltimoHeartbeat(): ?Heartbeat
+    {
+        return Heartbeat::where('monitor_id', $this->mapeo->FK_id_monitor_kuma)
             ->orderBy('time', 'desc')
             ->first();
-
-        if ($ultimoEstado) {
-            event(new ServerStatusCambio([
-                'sibop_id' => $this->mapeo->FK_id_unidad,
-                'status'   => $ultimoEstado->status,
-                'ping'     => $ultimoEstado->ping,
-                'time'     => $ultimoEstado->time
-            ]));
-        }
+    }
+    private function broadcastServerUpdate(Heartbeat $heartbeat): void
+    {
+        event(new ServerStatusCambio([
+            'sibop_id' => $this->mapeo->FK_id_unidad,
+            'status' => $heartbeat->status,
+            'ping' => $heartbeat->ping,
+            'time' => $heartbeat->time
+        ]));
     }
 }

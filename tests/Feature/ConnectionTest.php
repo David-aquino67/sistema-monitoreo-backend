@@ -12,6 +12,7 @@ class ConnectionTest extends TestCase
     {
         $encryption = new EncryptionService();
         $connection = new ConnectionService($encryption);
+        //$connection = app(ConnectionService::class);
 
         $resultado = $connection->getCredentialsByUnidad(1);
 
