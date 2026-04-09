@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Heartbeat;
+use App\Repositories\Interfaces\HeartbeatRepositoryInterface;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -11,7 +13,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(
+            \App\Repositories\Interfaces\HeartbeatRepositoryInterface::class,
+            \App\Repositories\HeartbeatRepository::class
+        );
     }
 
     /**
