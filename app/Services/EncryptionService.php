@@ -55,4 +55,15 @@ class EncryptionService
     {
         return substr($data, self::longitud);
     }
+    private function executeOpenSSLDecrypt(string $ciphertext, string $key, string $iv): string
+    {
+        $descrypted = openssl_decrypt(
+            $ciphertext,
+            self::algoritmo,
+            $key,
+            OPENSSL_RAW_DATA,
+            $iv
+        );
+        return ($descrypted === false) ? "Error en descifrado OpenSSL" : trim($descrypted);
+    }
 }
