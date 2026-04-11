@@ -42,6 +42,11 @@ class EncryptionService
         if (strlen($binaruData) <= self::longitud) {
             return "error de formato datos insufucientes";
         }
+        $iv = $this->inicializacionVector($binaruData);
+        $ciphertext = $this->extraetexto($binaruData);
+        $key = $this->keyMD5($masterPassword);
+
+        return $this->executeOpenSSLDecrypt($ciphertext, $key, $iv);
     }
     private function keyMD5(string $masterPassword): string
     {
