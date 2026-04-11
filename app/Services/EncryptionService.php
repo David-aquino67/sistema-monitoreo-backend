@@ -47,5 +47,8 @@ class EncryptionService
     {
         return md5($masterPassword, true);
     }
-
+    private function inicializacionVector(string $data):string
+    {
+        return substr($data, 0, self::longitud);
+    }
 }
