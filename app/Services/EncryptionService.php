@@ -3,9 +3,9 @@ namespace App\Services;
 
 class EncryptionService
 {
-    /**
-     * Descifra contraseñas de mRemoteNG (AES-128-CBC)
-     */
+    private const algoritmo = 'aes-128-cbc';
+    private const longitud  = 16;
+
     public function decryptMRemote(string $base64Password, ?string $masterPassword = null): ?string
     {
         if (empty($base64Password)) {
@@ -36,4 +36,16 @@ class EncryptionService
         );
         return ($decrypted === false) ? "Error OpenSSL" : trim($decrypted);
     }
+    private function procesoDesifrado(string $base64Password, ?string $masterPassword = null): ?string
+    {
+        $binaruData = base64_encode(trim($base64Password));
+        if (strlen($binaruData) <= self::longitud) {
+            return "error de formato datos insufucientes";
+        }
+    }
+    private function keyMD5(string $masterPassword): string
+    {
+        return md5($masterPassword, true);
+    }
+
 }
