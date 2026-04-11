@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Repositories;
-
+use Illuminate\Support\Facades\DB;
 class encontrarConnectionData implements Interfaces\encontrarConnectionData
 {
 

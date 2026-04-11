@@ -3,39 +3,28 @@
 namespace App\Services;
 
 use Illuminate\Support\Facades\DB;
+use App\Repositories\Interfaces\ConnectionRepositoryInterface;
 
 class ConnectionService
 {
     protected $encryption;
+    protected $connectionRepo;
 
-    public function __construct(EncryptionService $encryption)
+    public function __construct(EncryptionService $encryption, ConnectionRepositoryInterface $connectionRepo)
     {
         $this->encryption = $encryption;
+        $this->connectionRepo = $connectionRepo;
     }
 
     public function getCredentialsByUnidad(int $unidadId): ?array
     {
-       $conexionRaw = $this->encontrarConnectionData($unidadId);
+       $conexionRaw = $this->connectionRepo->encontrarConnectionData($unidadId);
 
         if (!$conexionRaw) {
             return null;
         }
 
         return $this->formatoDecryptCredentials($conexionRaw);
-    }
-    private function encontrarConnectionData(int $unidadId)
-    {
-        return DB::table('monitor_conexion')
-            ->join('tblCons', function ($join) {
-                $join->on(
-                    'monitor_conexion.constant_id', 
-                    '=', 
-                    DB::raw('tblCons.ConstantID COLLATE SQL_Latin1_General_CP1_CI_AS')
-                );
-            })
-            ->where('monitor_conexion.unidad_id', $unidadId)
-            ->select('tblCons.Username', 'tblCons.Password', 'tblCons.Hostname', 'tblCons.Port')
-            ->first();
     }
     private function formatoDecryptCredentials($conexion): array
     {
