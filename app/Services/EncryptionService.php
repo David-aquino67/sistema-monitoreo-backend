@@ -51,4 +51,8 @@ class EncryptionService
     {
         return substr($data, 0, self::longitud);
     }
+    private function extraetexto(string $data):string
+    {
+        return substr($data, self::longitud);
+    }
 }
