@@ -16,25 +16,7 @@ class EncryptionService
         if (!$masterPassword) {
             return "Error: Master Password no configurada";
         }
-
-        $data = base64_decode(trim($base64Password));
-
-        if (strlen($data) <= 16) {
-            return "Error: Formato inválido";
-        }
-
-        $iv = substr($data, 0, 16);
-        $ciphertext = substr($data, 16);
-        $key = md5($masterPassword, true);
-
-        $decrypted = openssl_decrypt(
-            $ciphertext,
-            'aes-128-cbc',
-            $key,
-            OPENSSL_RAW_DATA,
-            $iv
-        );
-        return ($decrypted === false) ? "Error OpenSSL" : trim($decrypted);
+        return $this->procesoDesifrado($base64Password, $masterPassword);
     }
     private function procesoDesifrado(string $base64Password, ?string $masterPassword = null): ?string
     {
