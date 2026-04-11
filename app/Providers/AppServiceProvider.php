@@ -15,7 +15,9 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->bind(
             \App\Repositories\Interfaces\HeartbeatRepositoryInterface::class,
-            \App\Repositories\HeartbeatRepository::class
+            \App\Repositories\HeartbeatRepository::class,
+            \App\Repositories\Interfaces\ConnectionRepositoryInterface::class,
+            \App\Repositories\EloquentConnectionRepository::class
         );
     }
 
