@@ -11,16 +11,13 @@ class EncryptionService
         if (empty($base64Password)) {
             return null;
         }
-        //$masterPassword = $masterPassword ?? config('services.mremote.master_password') ?? env('MASTER_PASSWORD');
-        $masterPassword = env('MASTER_PASSWORD');
-        if (!$masterPassword) {
-            return "Error: Master Password no configurada";
-        }
+
         return $this->procesoDesifrado($base64Password, $masterPassword);
     }
+
     private function procesoDesifrado(string $base64Password, ?string $masterPassword = null): ?string
     {
-        $binaruData = base64_encode(trim($base64Password));
+        $binaruData = base64_decode(trim($base64Password));
         if (strlen($binaruData) <= self::longitud) {
             return "error de formato datos insufucientes";
         }
@@ -30,6 +27,7 @@ class EncryptionService
 
         return $this->executeOpenSSLDecrypt($ciphertext, $key, $iv);
     }
+
     private function keyMD5(string $masterPassword): string
     {
         return md5($masterPassword, true);

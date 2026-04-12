@@ -4,5 +4,5 @@ namespace App\Interfaces;
 
 interface DecryptorInterface
 {
-     public function decrypt(string $data): ?string;
+     public function decrypt(string $encrypted, ?string $key = null): ?string;
 }
