@@ -5,7 +5,11 @@ namespace App\Providers;
 use App\Models\Heartbeat;
 use App\Repositories\Interfaces\HeartbeatRepositoryInterface;
 use Illuminate\Support\ServiceProvider;
-
+use App\Repositories\HeartbeatRepository;
+use App\Repositories\Interfaces\ConnectionRepositoryInterface;
+use App\Repositories\EloquentConnectionRepository;
+use App\Interfaces\DecryptorInterface;
+use App\Services\MRemoteAdapterService;
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -14,10 +18,16 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(
-            \App\Repositories\Interfaces\HeartbeatRepositoryInterface::class,
-            \App\Repositories\HeartbeatRepository::class,
-            \App\Repositories\Interfaces\ConnectionRepositoryInterface::class,
-            \App\Repositories\EloquentConnectionRepository::class
+            HeartbeatRepositoryInterface::class,
+            HeartbeatRepository::class
+        );
+        $this->app->bind(
+            ConnectionRepositoryInterface::class,
+            EloquentConnectionRepository::class
+        );
+        $this->app->bind(
+            DecryptorInterface::class,
+            MRemoteAdapterService::class
         );
     }
 
