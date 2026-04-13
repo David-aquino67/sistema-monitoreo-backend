@@ -6,7 +6,7 @@ use App\Models\MonitorServidor;
 use App\Repositories\Interfaces\Collection;
 use App\Repositories\Interfaces\MonitorRepositoryInterface;
 
-class MonitorRepository implements Interfaces\MonitorRepositoryInterface
+class MonitorRepository implements MonitorRepositoryInterface
 {
 
     public function getAllMapeos(): Collection

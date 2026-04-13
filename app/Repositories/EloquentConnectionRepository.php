@@ -1,8 +1,10 @@
 <?php
 
 namespace App\Repositories;
+use App\Repositories\Interfaces\ConnectionRepositoryInterface;
 use Illuminate\Support\Facades\DB;
-class encontrarConnectionData implements Interfaces\encontrarConnectionData
+
+class EloquentConnectionRepository implements ConnectionRepositoryInterface
 {
 
     public function encontrarConnectionData(int $unidadId): ?object

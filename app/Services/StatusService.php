@@ -7,6 +7,8 @@ use App\Models\Heartbeat;
 use App\Services\Sibop;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
+use App\Repositories\Interfaces\MonitorRepositoryInterface; 
+use App\Repositories\Interfaces\HeartbeatRepositoryInterface;
 
 class StatusService
 {

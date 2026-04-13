@@ -4,12 +4,19 @@ namespace App\Providers;
 
 use App\Models\Heartbeat;
 use App\Repositories\Interfaces\HeartbeatRepositoryInterface;
+
 use Illuminate\Support\ServiceProvider;
 use App\Repositories\HeartbeatRepository;
+
 use App\Repositories\Interfaces\ConnectionRepositoryInterface;
 use App\Repositories\EloquentConnectionRepository;
+
 use App\Interfaces\DecryptorInterface;
 use App\Services\MRemoteAdapterService;
+
+use App\Repositories\Interfaces\MonitorRepositoryInterface; 
+use App\Repositories\MonitorRepository; 
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -29,10 +36,10 @@ class AppServiceProvider extends ServiceProvider
             DecryptorInterface::class,
             MRemoteAdapterService::class
         );
-        $this->app->bind(
-            \App\Repositories\Interfaces\MonitorRepositoryInterface::class,
-            \App\Repositories\MonitorRepository::class
-        );
+       $this->app->bind(
+        MonitorRepositoryInterface::class,
+        MonitorRepository::class
+    );
     }
 
     /**

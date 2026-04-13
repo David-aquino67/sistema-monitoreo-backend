@@ -2,7 +2,7 @@
 
 namespace App\Repositories\Interfaces;
 
-interface encontrarConnectionData
+interface ConnectionRepositoryInterface
 {
     public function encontrarConnectionData(int $unidadId): ?object;
 }
