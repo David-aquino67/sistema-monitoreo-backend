@@ -11,15 +11,22 @@ use Illuminate\Support\Facades\Cache;
 class StatusService
 {
     private $refresh_cache = 60*60*24*62;
+    protected $monitorRepo;
+    protected $heartbeatRepo;
+
+    public function __construct(MonitorRepositoryInterface $monitorRepo, HeartbeatRepositoryInterface $heartbeatRepo) {
+        $this->monitorRepo = $monitorRepo;
+        $this->heartbeatRepo = $heartbeatRepo;
+    }
 
     public function getStatusFull()
     {
-        $mapeos = MonitorServidor::all();
+        $mapeos = $this->monitorRepo->getAllMapeos();
         $unidadesSibop = $this->obtenerCatalogoUnidades($mapeos);
 
         return $mapeos->map(function ($item) use ($unidadesSibop) {
             $unidadData = $this->buscarUnidadEnCatalogo($unidadesSibop, $item->FK_id_unidad);
-            $ultimoHb = $this->obtenerUltimoHeartbeat($item->FK_id_monitor_kuma);
+            $ultimoHb = $this->heartbeatRepo->getLatestByMonitorId($item->FK_id_monitor_kuma);
 
             return $this->formatearRespuesta($item, $unidadData, $ultimoHb);
         });
@@ -34,12 +41,6 @@ class StatusService
     private function buscarUnidadEnCatalogo(array $catalogo, int $unidadId): ?array
     {
         return collect($catalogo)->firstWhere('REGISTRO_id', $unidadId);
-    }
-    private function obtenerUltimoHeartbeat(int $monitorId):?Heartbeat
-    {
-        return Heartbeat::where('monitor_id', $monitorId)
-            ->orderBy('time', 'desc')
-            ->first();
     }
     private function formatearRespuesta(MonitorServidor $item, ?array $unidadData, ?Heartbeat $ultimoHb ):array
     {
