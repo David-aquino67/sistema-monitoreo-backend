@@ -12,4 +12,12 @@ class HeartbeatRepository implements Interfaces\HeartbeatRepositoryInterface
     {
         return Heartbeat::where('monitor_Id', $monitor_Id)->orderBy('time', 'desc')->first();
     }
+
+    public function obtenerUltimoDeMonitorId(int $monitor_Id): ?Heartbeat
+    {
+        return Heartbeat::where('monitor_id', $monitor_Id)
+            ->orderBy('time', 'desc')
+            ->first();
+    }
+
 }
