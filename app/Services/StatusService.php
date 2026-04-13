@@ -28,7 +28,7 @@ class StatusService
 
         return $mapeos->map(function ($item) use ($unidadesSibop) {
             $unidadData = $this->buscarUnidadEnCatalogo($unidadesSibop, $item->FK_id_unidad);
-            $ultimoHb = $this->heartbeatRepo->getLatestByMonitorId($item->FK_id_monitor_kuma);
+            $ultimoHb = $this->heartbeatRepo->obtenerUltimoDeMonitorId($item->FK_id_monitor_kuma);
 
             return $this->formatearRespuesta($item, $unidadData, $ultimoHb);
         });

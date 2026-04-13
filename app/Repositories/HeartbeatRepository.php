@@ -5,7 +5,7 @@ namespace App\Repositories;
 use App\Models\Heartbeat;
 use App\Repositories\Interfaces\HeartbeatRepositoryInterface;
 
-class HeartbeatRepository implements Interfaces\HeartbeatRepositoryInterface
+class HeartbeatRepository implements HeartbeatRepositoryInterface
 {
 
     public function obtenerUltimoHeartbeat(int $monitor_Id): ?Heartbeat
