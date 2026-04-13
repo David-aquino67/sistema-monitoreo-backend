@@ -11,8 +11,8 @@ class ConnectionTest extends TestCase
     public function test_debe_descifrar_password_real_de_mremoteng()
     {
         $encryption = new EncryptionService();
-        $connection = new ConnectionService($encryption);
-        //$connection = app(ConnectionService::class);
+        //$connection = new ConnectionService($encryption);
+        $connection = app(ConnectionService::class);
 
         $resultado = $connection->getCredentialsByUnidad(1);
 

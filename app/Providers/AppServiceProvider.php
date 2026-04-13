@@ -29,6 +29,10 @@ class AppServiceProvider extends ServiceProvider
             DecryptorInterface::class,
             MRemoteAdapterService::class
         );
+        $this->app->bind(
+            \App\Repositories\Interfaces\MonitorRepositoryInterface::class,
+            \App\Repositories\MonitorRepository::class
+        );
     }
 
     /**
