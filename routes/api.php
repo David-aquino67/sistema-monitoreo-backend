@@ -31,3 +31,5 @@ Route::prefix('usuarios')->controller(UsuarioController::class)->group(function 
 });
 
 Route::get('/servidores', [ServidorController::class, 'index']);
+
+Route::post('/server/status', [GatewayController::class, 'dispatch']);

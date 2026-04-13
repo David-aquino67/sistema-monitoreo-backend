@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use http\Client\Request;
 
 class GatewayController extends Controller
 {
@@ -15,8 +16,9 @@ class GatewayController extends Controller
 
         return response()->json([
             'ok' => true,
+            'message' => 'Status dispatch iniciado',
             'count' => $data->count()
-        ]);
+        ], 202);
     }
 
 }

@@ -1,16 +1,33 @@
 <?php
+
 namespace App\Services;
 
 use App\Events\ServerStatusCambio;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+
 class Gateway
 {
-    public function dispatchStatusUpdate(Collection $data)
+    private const CHUNK_SIZE = 50;
+
+    public function dispatchStatusUpdate(Collection $data): void
     {
-        $data->chunk(50)->each(function ($chunk, $index) {
-            event(new ServerStatusCambio($chunk->values()->all()));
-            Log::info("Gateway: Paquete #" . ($index + 1) . " procesado.");
+        if ($data->isEmpty()) {
+            return;
+        }
+        $data->chunk(self::CHUNK_SIZE)->each(function ($chunk, $index) {
+            $this->processPackage($chunk, $index + 1);
+            unset($chunk);
         });
+    }
+    private function processPackage(Collection $chunk, int $packageNumber): void
+    {
+        try {
+            $payload = $chunk->values()->all();
+            event(new ServerStatusCambio($payload));
+            Log::info("Gateway: Paquete #{$packageNumber} procesado con " . count($payload) . " servidores.");
+        } catch (\Exception $e) {
+            Log::error("Gateway Error en Paquete #{$packageNumber}: " . $e->getMessage());
+        }
     }
 }
