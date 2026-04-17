@@ -18,12 +18,14 @@ class ServerStatusCambio implements ShouldBroadcast
         $this->payload = $datosDisponibilidad;
     }
 
-    public function broadcastOn()
+    public function broadcastOn(): array
     {
-        return new Channel('status-channel');
+        return [
+            new Channel('status-channel'),
+        ];
     }
 
-    public function broadcastAs()
+    public function broadcastAs(): string
     {
         return 'server.updated';
     }
