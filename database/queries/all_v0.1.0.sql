@@ -239,9 +239,9 @@ PRINT 'INCIA INSERCIÓN DE DATOS (INFORMACIÓN ESTÁTICA)'
 	INSERT INTO usuarios(id_sibop, FK_permiso_ability) VALUES
 		(1, 'admin');
 
-INSERT INTO monitores_servidores(FK_id_unidad, FK_id_monitor_kuma) VALUES
+    INSERT INTO monitores_servidores(FK_id_unidad, FK_id_monitor_kuma) VALUES
         (64, 15), -- UMF 9 SIBOP, Kuma UMF 9 HTTP
-        (64, 16); -- UMF 9 SIBOP, Kuma UMF 9 Red
+        (64, 16), -- UMF 9 SIBOP, Kuma UMF 9 Red
         (57, 2),
         (58, 3),
         (58, 4),
@@ -345,12 +345,19 @@ INSERT INTO monitores_servidores(FK_id_unidad, FK_id_monitor_kuma) VALUES
         (113, 102);
 
 	INSERT INTO versiones(numero_version, titulo_version, fecha_liberacion) VALUES
-		('v1.1.0', 'Versión inicial del sistema', GETDATE());
+		('v0.1.0', 'Sincronización con Kuma y mRemoteNG', GETDATE());
 
 	INSERT INTO historial_versiones(numero_version, titulo_cambio, descripcion_cambio) VALUES
-		'v1.1.0', 
-    'Infraestructura de Conexiones', 
-    'Se añadieron las tablas estructurales de mRemoteNG (tblCons, tblRoot, tblConfig) para la gestión centralizada de accesos remotos.';
+	(
+        'v0.1.0', 
+        'Sincronización con Kuma y mRemoteNG', 
+        'Se sincronizan datos con mRemoteNG (Contraseñas de acceso) y UptimeKuma (Disponibilidad)'
+    ),
+    (
+        'v0.1.0', 
+        'Vista de disponibilidad personalizada', 
+        'Se personaliza una vista de disponibildiad de SIMF con datos de UptimeKuma'
+    );
 
 PRINT 'TERMINA INSERCIÓN DE DATOS (INFORMACIÓN ESTÁTICA) EXITOSAMENTE'
 END TRY
@@ -503,63 +510,3 @@ CREATE TABLE [dbo].[monitor_conexion] (
 GO
 
 CREATE INDEX IX_monitor_conexion_unidad ON [monitor_conexion] (unidad_id);
-
-
--- test
-USE smars_testing;
-GO
-SELECT * FROM monitor_conexion 
-
--- Ajustamos tu columna para que use la misma regla que mRemoteNG
-ALTER TABLE [dbo].[monitor_conexion] 
-ALTER COLUMN [constant_id] VARCHAR(128) COLLATE SQL_Latin1_General_CP1_CS_AS NOT NULL;
-GO
-GO
-
--- 2. Inserción Balanceada (110 campos)
-INSERT INTO [dbo].[tblCons]
-           ([ConstantID],[PositionID],[ParentID],[LastChange],[Name],[Type],[Expanded],[Description]
-           ,[Icon],[Panel],[Username],[DomainName],[Password],[Hostname],[Protocol],[PuttySession]
-           ,[Port],[ConnectToConsole],[UseCredSsp],[RenderingEngine],[ICAEncryptionStrength]
-           ,[RDPAuthenticationLevel],[Colors],[Resolution],[DisplayWallpaper],[DisplayThemes]
-           ,[EnableFontSmoothing],[EnableDesktopComposition],[CacheBitmaps],[RedirectDiskDrives]
-           ,[RedirectPorts],[RedirectPrinters],[RedirectSmartCards],[RedirectSound],[RedirectKeys]
-           ,[Connected],[PreExtApp],[PostExtApp],[MacAddress],[UserField],[ExtApp],[VNCCompression]
-           ,[VNCEncoding],[VNCAuthMode],[VNCProxyType],[VNCProxyIP],[VNCProxyPort],[VNCProxyUsername]
-           ,[VNCProxyPassword],[VNCColors],[VNCSmartSizeMode],[VNCViewOnly],[RDGatewayUsageMethod]
-           ,[RDGatewayHostname],[RDGatewayUseConnectionCredentials],[RDGatewayUsername]
-           ,[RDGatewayPassword],[RDGatewayDomain],[InheritCacheBitmaps],[InheritColors]
-           ,[InheritDescription],[InheritDisplayThemes],[InheritDisplayWallpaper]
-           ,[InheritEnableFontSmoothing],[InheritEnableDesktopComposition],[InheritDomain]
-           ,[InheritIcon],[InheritPanel],[InheritPassword],[InheritPort],[InheritProtocol]
-           ,[InheritPuttySession],[InheritRedirectDiskDrives],[InheritRedirectKeys]
-           ,[InheritRedirectPorts],[InheritRedirectPrinters],[InheritRedirectSmartCards]
-           ,[InheritRedirectSound],[InheritResolution],[InheritUseConsoleSession]
-           ,[InheritUseCredSsp],[InheritRenderingEngine],[InheritICAEncryptionStrength]
-           ,[InheritRDPAuthenticationLevel],[InheritUsername],[InheritPreExtApp]
-           ,[InheritPostExtApp],[InheritMacAddress],[InheritUserField],[InheritExtApp]
-           ,[InheritVNCCompression],[InheritVNCEncoding],[InheritVNCAuthMode],[InheritVNCProxyType]
-           ,[InheritVNCProxyIP],[InheritVNCProxyPort],[InheritVNCProxyUsername]
-           ,[InheritVNCProxyPassword],[InheritVNCColors],[InheritVNCSmartSizeMode]
-           ,[InheritVNCViewOnly],[InheritRDGatewayUsageMethod],[InheritRDGatewayHostname]
-           ,[InheritRDGatewayUseConnectionCredentials],[InheritRDGatewayUsername]
-           ,[InheritRDGatewayPassword],[InheritRDGatewayDomain],[LoadBalanceInfo]
-           ,[AutomaticResize],[InheritLoadBalanceInfo],[InheritAutomaticResize])
-VALUES
-    ('de7c5ca9-5c9f-451e-a52d-c45fc99413cb', 1, '0', '2026-03-24T11:56:50', 'develop', 'Connection', 0, '',
-    'mRemoteNG', 'General', 'sa', '', 'CQ2njWKYZU1bzN9NAwsPbclMvnHOvhT8GI+8L/WP8eI=', '11.1.22.201', 'RDP', 'Default Settings',
-    3389, 0, 1, 'IE', 'EncrBasic', 'NoAuth', 'Colors16Bit', 'FitToWindow', 
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 'DoNotPlay', 0,
-    0, NULL, NULL, NULL, NULL, NULL, 'CompNone',
-    'EncHextile', 'AuthVNC', 'ProxyNone', '', 0, '',
-    '', 'ColNormal', 'SmartSAspect', 0, 'Never', 
-    NULL, 'Yes', NULL, NULL, NULL, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, NULL, 1, 0, 0);
-GO
--- 3. Vincular con la tabla de mapeo para Laravel
--- Borramos si existe y re-insertamos para la Unidad ID 1
-use smars_testing
-DELETE FROM [dbo].[monitor_conexion] WHERE [unidad_id] = 1;
-INSERT INTO [dbo].[monitor_conexion] (unidad_id, constant_id, created_at)
-VALUES (1, 'de7c5ca9-5c9f-451e-a52d-c45fc99413cb', GETDATE());
-GO
