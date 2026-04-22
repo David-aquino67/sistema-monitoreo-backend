@@ -2,13 +2,12 @@
 
 namespace App\Services;
 
-use App\Models\MonitorServidor;
 use App\Models\Heartbeat;
 use App\Services\Sibop;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use App\Repositories\Interfaces\MonitorRepositoryInterface; 
 use App\Repositories\Interfaces\HeartbeatRepositoryInterface;
+use Illuminate\Support\Collection;
 
 class StatusService
 {
@@ -28,9 +27,10 @@ class StatusService
 
         return $mapeos->map(function ($item) use ($unidadesSibop) {
             $unidadData = $this->buscarUnidadEnCatalogo($unidadesSibop, $item->FK_id_unidad);
-            $ultimoHb = $this->heartbeatRepo->obtenerUltimoDeMonitorId($item->FK_id_monitor_kuma);
+            $ultimoHbRedRouter = $this->heartbeatRepo->obtenerUltimoDeMonitorId($item->FK_id_monitor_kuma_red);
+			$ultimoHbHttp = $this->heartbeatRepo->obtenerUltimoDeMonitorId($item->FK_id_monitor_kuma_http);
 
-            return $this->formatearRespuesta($item, $unidadData, $ultimoHb);
+            return $this->formatearRespuesta($item, $unidadData, $ultimoHbRedRouter, $ultimoHbHttp);
         });
     }
     private function obtenerCatalogoUnidades(Collection $mapeos):array
@@ -44,15 +44,17 @@ class StatusService
     {
         return collect($catalogo)->firstWhere('REGISTRO_id', $unidadId);
     }
-    private function formatearRespuesta(MonitorServidor $item, ?array $unidadData, ?Heartbeat $ultimoHb ):array
+    private function formatearRespuesta(?\stdClass $item, ?array $unidadData, ?Heartbeat $ultimoHbRedRouter, ?Heartbeat $ultimoHbHttp ):array
     {
         return [
-            'id'        => $item->REGISTRO_id,
-            'unidad_id' => $item->FK_id_unidad,
-            'nombre'    => $unidadData['descripcion'] ?? 'Unidad Desconocida',
-            'online'    => $ultimoHb ? (bool)$ultimoHb->status : false,
-            'latencia'  => $ultimoHb ? $ultimoHb->ping : 0,
-            'fecha'     => $ultimoHb ? $ultimoHb->time : null,
+            'id'        		=> $item->REGISTRO_id,
+            'unidad_id' 		=> $item->FK_id_unidad,
+            'nombre'    		=> $unidadData['descripcion'] ?? 'Unidad Desconocida',
+            'online'    		=> ((bool)$ultimoHbRedRouter->status?? false) && ((bool)$ultimoHbHttp->status?? false),
+			'online_red_router' => (bool)$ultimoHbRedRouter->status?? false,
+			'online_http' 		=> (bool)$ultimoHbHttp->status?? false,
+            'latencia'  		=> $ultimoHbHttp->ping?? 0,
+            'fecha'     		=> $ultimoHbHttp->time?? null,
         ];
     }
 }

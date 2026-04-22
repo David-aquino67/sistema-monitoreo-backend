@@ -5,8 +5,6 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Services\StatusService;
 use App\Services\Gateway;
-use App\Models\MonitorServidor;
-use App\Models\Heartbeat;
 
 class CheckServerStatus extends Command
 {
