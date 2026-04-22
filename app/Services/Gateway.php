@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Log;
 
 class Gateway
 {
-    private const CHUNK_SIZE = 50;
+    private const CHUNK_SIZE = 30;
 
     public function dispatchStatusUpdate(Collection $data): void
     {
