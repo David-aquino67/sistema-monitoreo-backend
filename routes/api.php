@@ -30,6 +30,9 @@ Route::prefix('usuarios')->controller(UsuarioController::class)->group(function 
 	Route::delete('/{id_sibop}', 'destroy')->middleware(['auth:sanctum', 'ability:admin']);
 });
 
-Route::get('/servidores', [ServidorController::class, 'index']);
+Route::prefix('servidores')->controller(ServidorController::class)->group(function () {
+	Route::get('/', 'index')->middleware(['auth:sanctum']);
+	//Route::post('/status', 'dispatch')->middleware(['auth:sanctum']);
+	//Route::post('/server/status', [GatewayController::class, 'dispatch']);
+});
 
-Route::post('/server/status', [GatewayController::class, 'dispatch']);
