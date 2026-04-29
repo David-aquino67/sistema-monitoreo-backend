@@ -36,3 +36,9 @@ Route::prefix('servidores')->controller(ServidorController::class)->group(functi
 	//Route::post('/server/status', [GatewayController::class, 'dispatch']);
 });
 
+Route::prefix ('servidores/{unidadId}')->group(function () {
+	Route::post('/reiniciar',[ServidorController::class, 'reiniciar'])->middleware(['auth:sanctum']);
+	Route::post('/reestablecer',[ServidorController::class, 'reestablecer'])->middleware(['auth:sanctum']);
+	Route::post('/limpiar',[ServidorController::class, 'limpiar'])->middleware(['auth:sanctum']);
+	Route::post('/levantar',[ServidorController::class, 'levantar'])->middleware(['auth:sanctum']);
+	});
