@@ -141,3 +141,18 @@ CREATE TABLE cat_acciones (
                               updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
+-- tabla de Histórico de Acciones
+CREATE TABLE historico_acciones (
+                                    id INT AUTO_INCREMENT PRIMARY KEY,
+                                    unidad_id INT NOT NULL,
+                                    accion_id INT NOT NULL,
+                                    usuario_sibop_id INT NOT NULL,
+                                    resultado_salida TEXT DEFAULT NULL,
+                                    created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+                                    updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    -- Definir la relación foránea
+                                    CONSTRAINT fk_accion
+                                        FOREIGN KEY (accion_id)
+                                            REFERENCES cat_acciones(id)
+) ENGINE=InnoDB;
