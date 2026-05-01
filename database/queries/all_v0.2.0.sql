@@ -4,8 +4,8 @@ INSERT INTO versiones(numero_version, titulo_version, fecha_liberacion) VALUES
 
 INSERT INTO historial_versiones(numero_version, titulo_cambio, descripcion_cambio) VALUES
 (
-	'v0.2.0', 
-	'Simplificación de cards de reestablecimiento', 
+	'v0.2.0',
+	'Simplificación de cards de reestablecimiento',
 	'Ahora solo hay una card de reeestablecimiento por unidad que incluye datos de los sensores de red (router) y de http'
 );
 
@@ -24,7 +24,7 @@ UPDATE monitores_servidores SET tipo_monitor = 'red_router' WHERE REGISTRO_id IN
 	83, 85, 87, 89, 91, 93, 95, 97, 99, 101, 103
 );
 
-GO  
+GO
 
 DELETE FROM monitores_servidores WHERE REGISTRO_id IN (92, 93, 1, 2);
 UPDATE monitores_servidores SET tipo_monitor = 'red', FK_id_monitor_kuma = 26 WHERE REGISTRO_id = 25;
@@ -40,7 +40,7 @@ UPDATE monitores_servidores SET tipo_monitor = 'http', FK_id_monitor_kuma = 31 W
 UPDATE monitores_servidores SET tipo_monitor = 'red_router', FK_id_monitor_kuma = 34 WHERE REGISTRO_id = 33;
 UPDATE monitores_servidores SET tipo_monitor = 'http', FK_id_monitor_kuma = 33 WHERE REGISTRO_id = 32;
 
-GO 
+GO
 
 UPDATE monitores_servidores SET tipo_monitor = 'http', FK_id_monitor_kuma = 35 WHERE REGISTRO_id = 34;
 UPDATE monitores_servidores SET tipo_monitor = 'red_router', FK_id_monitor_kuma = 36 WHERE REGISTRO_id = 35;
@@ -124,8 +124,20 @@ SELECT
     ms.tipo_monitor,
     kuma.name AS nombre_monitor_kuma
 FROM monitores_servidores ms
-INNER JOIN sibop.dbo.unidades u 
+INNER JOIN sibop.dbo.unidades u
     ON u.REGISTRO_id = ms.FK_id_unidad
-INNER JOIN OPENQUERY([KUMA_SERVER], 'SELECT id, name FROM `monitor`') AS kuma 
+INNER JOIN OPENQUERY([KUMA_SERVER], 'SELECT id, name FROM `monitor`') AS kuma
     ON kuma.id = ms.FK_id_monitor_kuma
 ORDER BY u.descripcion, ms.tipo_monitor;
+
+
+-- tabla de Catálogo de Acciones
+CREATE TABLE cat_acciones (
+                              id INT AUTO_INCREMENT PRIMARY KEY,
+                              nombre VARCHAR(255) NOT NULL,
+                              ruta_script VARCHAR(255) NOT NULL,
+                              descripcion VARCHAR(255) DEFAULT NULL,
+                              created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+                              updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
