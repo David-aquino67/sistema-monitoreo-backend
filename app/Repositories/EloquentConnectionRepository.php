@@ -53,5 +53,24 @@ class EloquentConnectionRepository implements ConnectionRepositoryInterface
 
         return $resultado->output();
     }
+    public function processServerAction(int $unidadId, string $accionNombre, int $usuarioId)
+    {
+        $accion = \DB::table('cat_acciones')
+            ->where('nombre', 'LIKE', $accionNombre)
+            ->first();
 
+        if (!$accion) throw new \Exception("Acción no encontrada", 404);
+
+        $resultado = $this->ejecutarPsExec($unidadId, $accion->ruta_script);
+
+        \DB::table('historico_acciones')->insert([
+            'unidad_id'        => $unidadId,
+            'accion_id'        => $accion->id,
+            'usuario_sibop_id' => $usuarioId,
+            'resultado_salida' => $resultado,
+            'created_at'       => now()
+        ]);
+
+        return $resultado;
+    }
 }
