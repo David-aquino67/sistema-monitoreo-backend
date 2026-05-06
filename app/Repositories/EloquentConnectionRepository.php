@@ -8,10 +8,6 @@ class EloquentConnectionRepository implements ConnectionRepositoryInterface
 {
     protected $connections;
 
-    public function __construct(ConnectionRepositoryInterface $connections)
-    {
-        $this->connections = $connections;
-    }
     public function encontrarConnectionData(int $unidadId): ?object
     {
         return DB::table('monitor_conexion')
